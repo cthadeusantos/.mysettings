@@ -1,0 +1,37 @@
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# This loads nvm bash_completion
+
+# Brew
+eval "$(homebrew/bin/brew shellenv)"
+
+# Pyenv environment variables
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+# Pyenv initialization
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
+# To avoid them accidentally linking against a Pyenv-provided Python
+alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
+
+alias ativar="source ~/.pyenv/versions/venv/bin/activate"
+
+# Setting colors to directories and files
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced
+
+# Change the command prompt
+function parse_git_branch() {
+    git branch 2> /dev/null | sed -n -e 's/^\* \(.*\)/[\1]/p'
+}
+
+COLOR_DEF=$'%f'
+COLOR_USR=$'%F{FFFF}'
+COLOR_DIR=$'%F{226}'
+COLOR_GIT=$'%F{011}'
+setopt PROMPT_SUBST
+#PROMPT='%n@%m %1~ %# '
+export PROMPT='${COLOR_USR}%n@%m ${COLOR_DIR}%~ ${COLOR_GIT}$(parse_git_branch)${COLOR_DEF}%# '
